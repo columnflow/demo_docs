@@ -12,7 +12,7 @@ jobs:
         - name: Sync overleaf
           run: |
             git remote add overleaf https://git:${OVERLEAF_TOKEN}@git.overleaf.com/65df171af9ff7989580f017d
-            git remote add origin_token https://git:${GITHUB_TOKEN}@github.com/columnflow/demo_documentation.git
+            git remote add origin_token https://git:${GITHUB_TOKEN}@github.com/columnflow/demo_docs.git
 
             git fetch overleaf
             git pull overleaf master
