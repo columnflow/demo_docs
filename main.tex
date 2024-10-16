@@ -31,7 +31,9 @@
 \usepackage{tabu}
 \usepackage{tabularray}
 \usepackage[most]{tcolorbox}
-
+\usepackage{tocloft}  % for lists for custom environments
+\usepackage{xparse}
+\usepackage{quotes}
 
 \NewTblrTheme{longtable1}{
     \DefTblrTemplate{conthead-text}{fancy}{}
@@ -74,6 +76,7 @@
 %\renewcommand{\chaptermark}[1]{\markboth{{\chaptername\ \thechapter.\ #1}}{}}
 % Following line generates undefined control sequence: section for me, so comment it out for now
 %\renewcommand{\sectionmark}[1]{\markright{{\sectionname\ \thesection.\ #1}}{}}
+
 
 \newcommand*\NewPage{\newpage\null\thispagestyle{empty}\newpage}
 
@@ -181,6 +184,57 @@
 \definecolor{codegray}{gray}{0.9}
 \newcommand{\code}[1]{\colorbox{codegray}{\texttt{#1}}}
 
+% define style for exercise environment
+\tcbuselibrary{skins, breakable}
+
+\tcbset{
+	myboxstyle/.style={
+		breakable,
+		colback=white,            % Background color for the content
+		colframe=black,           % Frame color
+		colbacktitle=gray!15,     % Background color for the title
+		coltitle=codeLimeGreen,           % Text color for the title
+		fonttitle=\bfseries,      %
+		title={#1},               % The title content will be passed as an argument
+		enhanced,
+		attach boxed title to top left={yshift=-2mm, xshift=2mm},
+		boxed title style={
+			colframe=black,
+			arc=1mm,
+			outer arc=1.5mm,
+			boxrule=0.5mm,        % Border thickness for the title
+		},
+		overlay={},
+	}
+}
+
+% create a new list for the exercises, with it's own counter
+\newlistof[chapter]{xrcise}{ex}{List of Exercises}
+
+% Define the 'exercise' environment to use the custom style
+
+\NewDocumentEnvironment{exercise}{mo}{
+	% #1: Title for Exercise
+	% #2: Solution
+	\refstepcounter{xrcise}
+	\par
+	\begin{tcolorbox}[myboxstyle={Exercise \thexrcise: #1}]
+	}{
+	\ExplSyntaxOn
+	\IfNoValueTF{#2}
+	{}
+	{\newline The~solution~can~be~found~in~\code{#2}}%
+	\ignorespaces
+	\ExplSyntaxOff
+	\end{tcolorbox}
+	\addcontentsline{ex}{xrcise}{Exercise \protect\numberline{\thexrcise}: \protect#1}
+	\par
+}
+
+% also create an automatically-generated list for the exercises
+
+
+
 \input{style_declarations}
 
 % define which files to consider for compilation.
@@ -192,17 +246,20 @@
 	sections/goal,
 	sections/setup,
 	sections/strategy,
+	sections/configs,
 	sections/taskarrayfunctions,
 	sections/calibrator,
 	sections/selector,
 	sections/producer,
 	sections/categorizer,
+	sections/shifts,
+	sections/event_weights,
 	sections/inference,
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
-\pagenumbering{roman}#
+\pagenumbering{roman}
 
 \begin{titlepage}
 	\frontmatter
@@ -235,6 +292,7 @@
 \tableofcontents
 %\listoffigures
 %\listoftables
+\listofxrcise
 
 \mainmatter
 \thispagestyle{empty}
@@ -242,8 +300,11 @@
 \pagestyle{fancy}
 \captionsetup{justification=raggedright,singlelinecheck=false}
 
-\input{chapters/intro}
-\input{chapters/exercise}
+
+\input{chapters/intro}    
+\input{chapters/exercise}    
+\input{chapters/advanced}
+
 \appendix
 \printbibliography
 
