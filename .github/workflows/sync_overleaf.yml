@@ -3,6 +3,10 @@ on:
 #        - cron: "*/5 * * * *"
     workflow_dispatch:
 
+permissions:
+    contents: write
+    pull-requests: write
+    issues: write
 name: "Sync overleaf"
 jobs:
     sync:
@@ -10,6 +14,7 @@ jobs:
         steps:
         - uses: actions/checkout@v4
           with:
+            ref: sync_overleaf
             fetch-depth: '0'
         - name: Sync overleaf
           run: |
