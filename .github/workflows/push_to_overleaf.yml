@@ -2,6 +2,7 @@ on:
     push:
         branches:
         - master
+    workflow_dispatch:
 
 permissions:
     contents: write
@@ -22,6 +23,9 @@ jobs:
             git remote add origin_token https://git:${GITHUB_TOKEN}@github.com/columnflow/demo_docs.git
 
             git push origin_token HEAD:sync_overleaf
+        env:
+            OVERLEAF_TOKEN: ${{ secrets.OVERLEAF_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     update_overleaf:
         runs-on: ubuntu-latest
@@ -36,4 +40,7 @@ jobs:
             git remote add overleaf https://git:${OVERLEAF_TOKEN}@git.overleaf.com/65df171af9ff7989580f017d
 
             git push overleaf HEAD:master
+          env:
+            OVERLEAF_TOKEN: ${{ secrets.OVERLEAF_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
