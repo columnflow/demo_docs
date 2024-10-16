@@ -28,3 +28,7 @@ jobs:
           env:
             OVERLEAF_TOKEN: ${{ secrets.OVERLEAF_TOKEN }}
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        - name: create pull request
+          run: gh pr create -B master -H sync_overleaf --title 'Merge sync_overleaf into master' --body 'Created by Github action'
+          env:
+              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
