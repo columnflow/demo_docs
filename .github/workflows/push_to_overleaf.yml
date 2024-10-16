@@ -1,0 +1,39 @@
+on:
+    push:
+        branches:
+        - master
+
+permissions:
+    contents: write
+    pull-requests: write
+    issues: write
+
+name: "Push to overleaf"
+jobs:
+    update_sync_overleaf:
+        runs-on: ubuntu-latest
+        name: Update branch 'sync_overleaf'
+        steps:
+        - uses: actions/checkout@v4
+          with:
+            fetch-depth: '0'
+        - name: Push to overleaf
+          run: |
+            git remote add origin_token https://git:${GITHUB_TOKEN}@github.com/columnflow/demo_docs.git
+
+            git push --rebase origin_token HEAD:sync_overleaf
+
+    update_overleaf:
+        runs-on: ubuntu-latest
+        name: Update overleaf
+        steps:
+        - uses: actions/checkout@v4
+          with:
+            ref: sync_overleaf
+            fetch-depth: '0'
+        - name: Push to overleaf
+          run: |
+            git remote add overleaf https://git:${OVERLEAF_TOKEN}@git.overleaf.com/65df171af9ff7989580f017d
+
+            git push --rebase overleaf HEAD:master
+
