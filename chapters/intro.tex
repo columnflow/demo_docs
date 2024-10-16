@@ -1,23 +1,5 @@
-\chapter{Introduction to ColumnFlow}
+\include{sections/general_intro}
+\include{sections/goal}
+\include{sections/setup}
+\include{sections/strategy}
 
-\texttt{ColumnFlow} is a fully orchestrated columnar analysis back-end for high-energy physics (HEP) analysis aiming at streamlining big-data processing. It is currently hosted on GitHub at:
-
-\texttt{\textcolor{LimeGreen}{\href{https://github.com/columnflow/columnflow}{\underline{https://github.com/columnflow/columnflow}}}}.
-
-It is purely \texttt{Python} based and employs multiple packages which are well-established and maintained within the HEP community. The data processing is based on columns within \texttt{Awkward} arrays, with \texttt{Coffea} generated behaviour. The workflow orchestration is managed by \texttt{Law}, while the meta data and configuration is managed by \texttt{Order}. At the time of writing, the team of developers is solely comprised of data analysts for the CMS Collaboration. For this reason, this tutorial is structured accordingly. Note, however, that \texttt{ColumnFlow} itself is experiment-agnostic and may be extended to other use cases. Moreover, please note that this tutorial is not meant to document all currently available \texttt{ColumnFlow} functionalities. Rather, it is intended as an introductory hands-on exercise, providing an overview of the most fundamental \texttt{ColumnFlow} tools. For a comprehensive user-manual, please visit the official documentation hosted at \texttt{\textcolor{LimeGreen}{\href{https://columnflow.readthedocs.io/en/latest/}{\underline{https://columnflow.readthedocs.io/en/latest/}}}}. In case of any questions or comments, feel free to contact the maintainers via the previously mentioned GitHub repository. 
- % might want to put columnflow.readthedocs.io/en/latest as a proper reference
-
-\section{Task Hierarchy}
-
-\texttt{ColumnFlow} organises analysis steps into \texttt{Law} objects referred to as \texttt{"Tasks"}. Although the \texttt{ColumnFlow} pre-defined tasks already allow for a fairly complete end-to-end analysis workflow, new tasks can also be created by the user. The tasks are performed in a sequential and hierarchical way, where each task has well-defined dependencies. 
-
-The tasks can be loosely classified as performing event calibration/selection, variable calculation or producing final results (e.g. histograms). The full \texttt{ColumnFlow} task tree, excluding CMS specific tasks, is shown in Fig. \ref{fig:task_graph}.
-
-\begin{figure}[p]
-    \centering
-    \includegraphics[scale=0.8]{images/CF_tasks.png}
-    \caption{\justifying{\texttt{ColumnFlow} task tree.}}
-    \label{fig:task_graph}
-\end{figure}
-
-\section{ColumnFlow objects}
