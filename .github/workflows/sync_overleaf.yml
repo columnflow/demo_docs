@@ -8,7 +8,9 @@ jobs:
     sync:
         runs-on: ubuntu-latest
         steps:
-        - uses: actions/checkout@v2
+        - uses: actions/checkout@v4
+          with:
+            fetch-depth: '0'
         - name: Sync overleaf
           run: |
             git remote add overleaf https://git:${OVERLEAF_TOKEN}@git.overleaf.com/65df171af9ff7989580f017d
