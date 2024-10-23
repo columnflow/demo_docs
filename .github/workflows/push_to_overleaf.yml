@@ -21,7 +21,7 @@ jobs:
         - name: Push to overleaf
           run: |
             git remote add origin_token https://git:${GITHUB_TOKEN}@github.com/columnflow/demo_docs.git
-
+            
             git push origin_token HEAD:sync_overleaf
         env:
             OVERLEAF_TOKEN: ${{ secrets.OVERLEAF_TOKEN }}
@@ -30,6 +30,7 @@ jobs:
     update_overleaf:
         runs-on: ubuntu-latest
         name: Update overleaf
+        needs: update_sync_overleaf
         steps:
         - uses: actions/checkout@v4
           with:
@@ -39,7 +40,8 @@ jobs:
           run: |
             git remote add overleaf https://git:${OVERLEAF_TOKEN}@git.overleaf.com/65df171af9ff7989580f017d
 
-            git push overleaf HEAD:master
+            git fetch overleaf
+            git push overleaf HEAD:sync_overleaf
           env:
             OVERLEAF_TOKEN: ${{ secrets.OVERLEAF_TOKEN }}
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
