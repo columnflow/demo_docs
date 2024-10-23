@@ -42,6 +42,7 @@ jobs:
             git remote add overleaf https://git:${OVERLEAF_TOKEN}@git.overleaf.com/65df171af9ff7989580f017d
 
             git fetch overleaf
+            git pull overleaf master
             git push overleaf HEAD:master
           env:
             OVERLEAF_TOKEN: ${{ secrets.OVERLEAF_TOKEN }}
