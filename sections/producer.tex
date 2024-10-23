@@ -1,1 +1,5 @@
 \section{Writing a Producer}\label{sec:producer}
+
+The \CCSPStlye{Producer} class is used to calculate higher-level observables and define new columns to be written o disk. The corresponding task is called \CCSPStlye{cf.ProduceColumns} (see Ref.~\cite{cf_repo} for detailed info). Naturally, we only want to compute these new variables for the relevant events for our analysis. Thus, the producers are executed after the selection step. 
+
+In this part of the tutorial, we will write a producer which calculates the four lepton invariant mass.
