@@ -1,11 +1,48 @@
 \section{Configuring the workflow}\label{sec:configs}
 
-% TODO: write this section
-Concepts to (briefly) introduce here
-\begin{itemize}
-	\item Order objects: Analysis, configs
-	\item law config for module resolution
-	\item brief walk through through demo config?
-\end{itemize}
+%Concepts to (briefly) introduce here
+%\begin{itemize}
+%	\item Order objects: Analysis, configs
+%	\item law config for module resolution
+%	\item brief walk through through demo config?
+%\end{itemize}
+%
+%Might want to move this to Chapter 1.
 
-Might want to move this to Chapter 1.
+This chapter gives an overview of the different modules that are needed to configure the workflow in general.
+These modules can be divided into two groups.
+On the one hand, there are modules to configure analysis-unspecific information, consisting of a metadata database containing general information about the data to process and the configuration for the \code{law} back-end.
+On the other hand, analysis-specific information is needed.
+This comprises of the specific list of physics processes and associated datasets that are needed to perform the analysis, as well as any additional information.
+These groups are briefly described in the following.
+For more information, please consider reading the corresponding documentation in Refs.~\cite{cf_repo,law,cmsdb,order}.
+
+\subsection{Configuration of external information}
+
+General information that is not specific to any given analysis is generally outsourced to other modules.
+As already shown in Fig.~\ref{fig:directory_structure}, there are two git submodules to handle these aspects.
+
+First, any analysis requires a pythonic interface to access information about the data to process.
+Such a metadata database is realized with the \code{cmsdb}~\cite{cmsdb} project, which is based on \code{order} package~\cite{order}\footnote{For CMS analyses, this might be superseded by a centralized interface in the near future}.
+This database organizes the datasets according to eras of data-taking and -processing.
+Datasets need to have and identifier, or key, with which they can be accessed.
+In the scope of this example, we will use the CMS data aggregation service (DAS) and its corresponding keys.
+Additionally, datasets are generally attributed to different physics processes, which themselves have additional information such as relations to other processes and cross section predictions for different center-of-mass energies.
+As the name suggests, \code{cmsdb} is tailored to the structure within the CMS collaboration.
+However, a similar interface based on \code{order} can be created for any project. 
+
+\begin{exercise}{Familiarize yourself with the metadata database}
+	Have a look at the definitions in the \code{modules/cmsdb/cmsdb} directory.
+	The campaign \code{run2\_2017\_nano\_v9} is of particular interest for this demonstration - have a look at the information that is compiled for the different datasets and physics processes.
+\end{exercise}
+
+\columnflow relies on \code{law}~\cite{law} to actually run the workflow.
+This back-end is configured in the \code{law.cfg} file.
+
+
+
+
+\subsection{Analysis-specific configuration}
+bla
+
+
