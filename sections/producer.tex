@@ -34,7 +34,9 @@ Additionally, the \code{muon_weights} producer applies scale factors for muons p
 	Familiarize yourself with the \CCSPStlye{Producer} classes mentioned above.
 \end{exercise}
 
-In this \code{H4L} analysis we want to calculate the four-lepton invariant mass, so that we can see the resonant Higgs peak. Note that to perform four-vector calculations, you need to import \code{attach\_coffea\_behavior} from \code{columnflow.production.util}. You will need to use kinematic information from both the \code{events.Electron} and \code{events.Muon} collections and create a new column which stores your calculated invariant mass.
+In this \code{H4L} analysis we want to calculate the four-lepton invariant mass, which should exhibit a peak near the Higgs rest mass for signal events.
+Note that to perform four-vector calculations, you need to import \code{attach\_coffea\_behavior} from \code{columnflow.production.util}.
+You will need to use kinematic information from both the \code{events.Electron} and \code{events.Muon} collections and create a new column which stores your calculated invariant mass.
 
 \begin{exercise}{Writing a Producer}{}
 	Write a \CCSPStlye{Producer} class which computes the four lepton invariant mass. 
