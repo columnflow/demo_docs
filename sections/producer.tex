@@ -1,6 +1,9 @@
 \section{Writing a Producer}\label{sec:producer}
 
-The \CCSPStlye{Producer} class is used to calculate higher-level variables and define new array columns to be written o disk. The corresponding task is called \CCSPStlye{cf.ProduceColumns} (see Ref.~\cite{cf_repo} for detailed info). Naturally, we only want to compute these new variables for the relevant events for our analysis. Thus, the producers are executed after the selection step in the task graph. 
+The \CCSPStlye{Producer} class is used to calculate higher-level variables and define new array columns to be written to disk.
+The corresponding task is called \CCSPStlye{cf.ProduceColumns} (see Ref.~\cite{cf_repo} for detailed information).
+Naturally, we only want to compute these new variables for the relevant events for our analysis.
+Thus, the producers are executed after the selection step in the task graph. 
 
 ColumnFlow also provides \CCSPStlye{Producer}s to compute commonly used event information, such as MC, pdf or pileup weights. These can be found under \code{columnflow.production.cms}. The \code{H4L} analysis includes three exemplary \CCSPStlye{Producer}s in \code{h4l/production/example.py}. You will notice that the script starts by importing all relevant modules, including CMS specific ones. We also load both \code{numpy} and \code{awkward} with the \code{maybe\_import} mechanism.
 
