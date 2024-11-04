@@ -5,7 +5,10 @@ The corresponding task is called \CCSPStlye{cf.ProduceColumns} (see Ref.~\cite{c
 Naturally, we only want to compute these new variables for the relevant events for our analysis.
 Thus, the producers are executed after the selection step in the task graph. 
 
-ColumnFlow also provides \CCSPStlye{Producer}s to compute commonly used event information, such as MC, pdf or pileup weights. These can be found under \code{columnflow.production.cms}. The \code{H4L} analysis includes three exemplary \CCSPStlye{Producer}s in \code{h4l/production/example.py}. You will notice that the script starts by importing all relevant modules, including CMS specific ones. We also load both \code{numpy} and \code{awkward} with the \code{maybe\_import} mechanism.
+The \code{H4L} analysis includes three exemplary \CCSPStlye{Producer}s in \code{h4l/production/example.py}.
+You will notice that the script starts by importing all relevant modules, including CMS specific ones.
+\columnflow provides \CCSPStlye{Producer}s to compute commonly used event information, such as MC, pdf or pileup weights, which can be found under \code{columnflow.production.cms}.
+We also load both \code{numpy} and \code{awkward} with the \code{maybe\_import} mechanism to account for differences between the software environments for different parts of the Task graph
 
 We start by defining a new \CCSPStlye{Producer} class named \code{features}. This class requires the transverse jet momentum \code{Jet.pt}, which must be added to its \code{uses} set, and produces two new array columns, the total jet transverse momentum \code{ht} and the number of jets in an event \code{n\_jet}, which are both added to its \code{produces} set. Each of these new variables is computed and stored to disk using the \code{set\_ak\_column} function. Note that for the case of \code{n\_jet}, we specified that the column element must be an \code{int} value.
 
