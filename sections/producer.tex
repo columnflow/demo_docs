@@ -23,7 +23,12 @@ The  \CCSPStlye{Producer} class \code{mc\_weight} reads in the \code{genWeight} 
 
 Meanwhile, the \code{category\_ids} class assigns each event an array of category ids, which it stores as a new column also named \code{category\_ids}. Thus, we must also add this class to our \code{produces} set. The topic of defining categories is discussed in detail in the Section \ref{sec:categories}. Now that we have access to both these \CCSPStlye{Producer} classes, the \code{cutflow\_features} class can use them to attribute MC weights (if the dataset passed to it is tagged as an MC dataset) and category ids to \code{events}. It then creates a new column in the updated \code{events} object named \code{cutflow.jet1\_pt} which saves the transverse momentum of the most energetic jet in each event stored in \code{Jet.pt\text{[:,0]}}. If the event does not contain jets, it instead saves an \code{EMPTY\_FLOAT} value. 
 
-The last \CCSPStlye{Producer} class defined is \code{example} and follows the same structure as the  two previously explained \CCSPStlye{Producer}s. First, it starts by creating the \code{cutflow.jet1\_pt} column by using the \CCSPStlye{Producer} class \code{features} called at \code{\text{events=self[features](events, **kwargs)}}. It then applies category ids and determinist seeds to the updated \code{events} object. Lastly, it applies normalization weights and muon weights only to \code{events} tagged as originating from a MC dataset. 
+The last \CCSPStlye{Producer} class defined is \code{example} and follows the same structure as the  two previously explained \CCSPStlye{Producer}s.
+First, it starts by creating the \code{cutflow.jet1\_pt} column by using the \CCSPStlye{Producer} class \code{features} called at \code{\text{events=self[features](events, **kwargs)}}.
+It then applies category ids and deterministic seeds to the updated \code{events} object.
+Lastly, two additional modules are called in this example.
+First, the \code{normalization_weights} producer is used to reweight the cross section of simulated events to the values that are provided in the metadata database (in this case \code{cmsdb}).
+Additionally, the \code{muon_weights} producer applies scale factors for muons provided by the CMS Muon POG to facilitate a better compatibility of data and simulation.
 
 \begin{exercise}{Understanding some basic Producers}
 	Familiarize yourself with the \CCSPStlye{Producer} classes mentioned above.
