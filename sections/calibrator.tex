@@ -14,22 +14,22 @@ In this module, we perform a calibration of jets in our events, which is based o
 % TODO: include code here?
 %\begin{lstlisting}[language=python]
 %	# coding: utf-8
-%	
+%
 %	"""
 %	Jet energy calibration methods.
 %	"""
-%	
+%
 %	from columnflow.calibration import Calibrator, calibrator
 %	from columnflow.calibration.cms.jets import jec, jer
 %	from columnflow.util import maybe_import
-%	
+%
 %	ak = maybe_import("awkward")
-%	
-%	
+%
+%
 %	# custom jec calibrator that only runs nominal correction
 %	jec_nominal = jec.derive("jec_nominal", cls_dict={"uncertainty_sources": []})
-%	
-%	
+%
+%
 %	@calibrator(
 %	uses={jec_nominal},
 %	produces={jec_nominal},
@@ -42,29 +42,29 @@ In this module, we perform a calibration of jets in our events, which is based o
 %	"""
 %	# correct jet energy scale
 %	events = self[jec_nominal](events, **kwargs)
-%	
+%
 %	# jet energy resolution smearing (MC only)
 %	if self.dataset_inst.is_mc:
 %	events = self[jer](events, **kwargs)
-%	
+%
 %	return events
-%	
-%	
+%
+%
 %	@jet_energy.init
 %	def jet_energy_init(self: Calibrator) -> None:
 %	# return immediately if dataset object has not been loaded yet
 %	if not getattr(self, "dataset_inst", None):
 %	return
-%	
+%
 %	# add columns producs by JER smearing calibrator (MC only)
 %	if self.dataset_inst.is_mc:
 %	self.uses.add(jer)
 %	self.produces.add(jer)
-%	
+%
 %\end{lstlisting}
 
-First the relevant modules are imported.
-Note that \code{awkward} is loaded with the \code{maybe\_import} mechanism.
+First some modules are imported. Note that \code{awkward} is loaded with
+the \code{maybe\_import} mechanism.
 This is necessary due to the encapsulated structure of the underlying software stack.
 In the scope of this exercise, we don't want to consider all the different sources of uncertainties that are associated with jet calibration yet.
 Therefore, we use the \code{derive} mechanism of \CCSPStlye{TaskArrayFunctions} to define a new class called \code{jec\_nominal}, which inherits from the original \code{jec} \CCSPStlye{Calibrator} but overwrites the corresponding class member variable.
