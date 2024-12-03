@@ -14,7 +14,7 @@ We start by defining a new \CCSPStlye{Producer} class named \code{features}.
 This class requires the transverse jet momentum \code{Jet.pt}, which must be added to its \code{uses} set.
 Additionally, it produces two new array columns, the total jet transverse momentum \code{ht} and the number of jets in an event \code{n\_jet}, which are both added to its \code{produces} set.
 Each of these new variables is computed and then added to the \code{events} array with the \code{set\_ak\_column} function.
-This is necessary to make these variables available outside of the \CCSP{Producer}, e.g.\ for writing the information to disk.
+This is necessary to make these variables available outside of the \CCSPStlye{Producer}, e.g.\ for writing the information to disk.
 Note that for the case of \code{n\_jet}, we specified that the column element must be an \code{int} value.
 
 The second \CCSPStlye{Producer} class \code{cutflow\_features} allows us to define and store features to be used for cutflow plots. Here, in addition to \code{Jet.pt} we also require \code{mc\_weight} and \code{category\_ids} to be added to the \code{uses} set. Note that both of these are \CCSPStlye{Producer}s themselves which you can find by following the import path at the beginning of the script.
