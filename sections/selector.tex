@@ -4,13 +4,114 @@ The \CCSPStlye{Selector} class should be used to implement analysis selections.
 This is a crucial step in the workflow since the decision to keep or reject objects or even whole events is performed here.
 Since the selection usually depends on for example four-momenta of the objects within the events, it is executed after the calibration.
 The corresponding task is called \CCSPStlye{cf.SelectEvents}.
+
 For more information, please consider Ref.~\cite{cf_repo}.
 
-\begin{table}[t]
-	\Caption{Selection criteria for leptons}{Shown are the selection criteria for electrons (muons) at the 'loose' and 'tight'}
+\renewcommand{\arraystretch}{1.5}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|m{4cm}|m{5cm}|m{5.5cm}|}
+    \hline
+    & \textbf{Electrons} & \textbf{Muons} \\ \hline
+    \textbf{Kinematic cuts} &
+    \begin{itemize}[leftmargin=*]
+    \item $p_T^e > 7$ GeV
+    \item $|\eta^e| < 2.5$
+    \end{itemize} &
+    \begin{itemize}[leftmargin=*]
+        \item $p_T^\mu > 5$ GeV
+        \item $|\eta^\mu| < 2.5$
+    \end{itemize} \\ \hline
+    \textbf{Vertex cuts} &
+    \begin{itemize}[leftmargin=*]
+        \item $d_{xy} < 0.5$
+        \item $d_z < 1$ cm
+        \item $SIP < 4$
+    \end{itemize} &
+    \begin{itemize}[leftmargin=*]
+        \item $d_{xy} < 0.5$
+        \item $d_z < 1$ cm
+        \item $SIP < 4$
+    \end{itemize} \\ \hline
+    \textbf{Isolation \& ID for \newline 'tight' working point} & Dedicated BDT targeting \newline prompt electrons. & Select only muons within \newline a well-defined cone ($R=0.35$). \\ \hline
+    \end{tabular}
+    \Caption{Selection criteria for leptons.}{Shown are the selection cuts for electrons/muons at the 'loose' working point, with the last row defining the extra requirement for the leptons to pass the 'tight' working point.}
+    \label{leptonSelection}
 \end{table}
+
 In this part of the tutorial, we will write selections for electrons and muons.
-\textbf{\underline{Loose Electrons}}
+In the script \code{h4l/selection/lepton.py} you can find the base structure to implement two \CCSPStlye{Selector} modules, \code{electron\_selection} and \code{muon\_selection}.
+Each of these objects uses the relevant event information for its implementation.
+
+
+\textbf{\underline{Electron Selection}}
+
+For \code{electron\_selection}, the electron kinematic information is first loaded into the \code{uses} set.
+Then, information that is dependent on the nanoAOD version is loaded. In this case, which MVA (Multi-Variate Analysis) flag should be used.
+Notice that we use the union operator \code{|} to append either \code{Electron.mvaFall17V2Iso} or \code{Electron.mvaHZZIso} to the set containing the kinematic variables.
+Lastly, to perform four-vector calculations, we also recquire \code{attach\_coffea\_behavior}, which is imported at the beginning of the script from \code{columnflow.selection.util}.
+
+
+This \CCSPStlye{Selector} object also has two more dependencies, \code{exposed} and \code{sandbox}.
+The first one determines whether or not the \CCSPStlye{Selector} object is available from the command line.
+As mentioned in the last section, \code{sandbox} specifies the software enviorment where this \CCSPStlye{Selector} will be executed.
+
+\newpage
 \begin{itemize}
-    \item
+    \item {
+        \textbf{\underline{Loose Electrons}} -- Within the main body of \code{electron\_selection}, all selections should be applied.
+        Note that the minimum transverse momentum has already been specified in \code{min\_pt}.
+        The actual value, in GeV, is set in \code{h4l/config/config\_h4l.py}, and depends on the argument \code{working\_point}.
+        In the config file, a dictionary stores two possible values, $15$ for a \code{'tight'} working point (default value), and $7$ for a \code{'loose'} working point.
+        Both the transverse momentum and the pseudorapidity selection criteria have already been applied in \code{default\_mask}.
+        You should now complete the mask with the remaining selection criteria from Table \ref{leptonSelection}.
+    }
+    \item {
+        \textbf{\underline{Tight Electrons}} -- Finally, you should also add a condition that applies the identification criteria for when \code{working\_point} is set to \code{'tight'}.
+        Both the fSCeta and BDT values are set in the function \code{return\_electron\_id\_cuts}, which can be found in \code{h4l/selection/util.py}.
+    }
 \end{itemize}
+
+After all selections have been applied, the final part of the module sorts all events by their momentum and applies the \code{default\_mask}.
+The indices of selected events are then stored in \code{selected\_electron\_idx}.
+The \code{electron\_selection} module finally returns both all events and a \CCSPStlye{SelectionResult} class instance.
+We initiate the \CCSPStlye{SelectionResult} instance by setting the \code{objects} and \code{aux} (i.e. auxiliary) arguments.
+Within \code{objects}, a nested dictionary saves \code{selected\_electron\_idx} as a value to an \code{Electron} key.
+The selection mask itself, \code{default\_mask} is stored in \code{aux}.
+
+\begin{exercise}{Writing a Selector -- Electron Selection}[h4l/selection/lepton\_solution.py]
+	Refering to Table \ref{leptonSelection}, fill in the missing information in the \CCSPStlye{Selector} module \code{electron\_selection} defined in \code{h4l/selection/lepton.py}.
+\end{exercise}
+
+\vspace{0.8cm}
+
+\textbf{\underline{Muon Selection}}
+
+The \code{muon\_selection} module behaves very similarly. In this case, a dedicated software environment is not required.
+There is also no information dependent on the nanoAOD version.
+Besides the kinematic information, the \code{uses} set also loads muon quality criteria (e.g. if it is a global or tracker muon), identification and isolation information.
+
+\begin{itemize}
+    \item {
+        \textbf{\underline{Loose Muons}} -- Within the main body of \code{muon\_selection}, a selection mask is now defined \code{selected\_muon\_mask}.
+        Similarly to the electron selection, the minimum transverse momentum and pseudorapidity are already defined.
+        You should now expand this mask such that:
+        \begin{enumerate}
+            \item you recquire either a global or tracker muon (for tracker muons \code{nStations} should be a positive);
+            \item discard standalone muon if the reconstructed tracks are only present in the muon system (i.e. for standalone muons, you should recquire a positive number of \code{nTrackerLayers});
+            \item apply the remaining selection criteria from Table \ref{leptonSelection}.
+        \end{enumerate}
+    }
+    \item {
+        \textbf{\underline{Tight Muons}} -- You should now add three conditions to \code{selected\_muon\_mask}:
+        \begin{enumerate}
+            \item enforce that the low momentum muons ($< 200$ GeV) are ParticleFlow candidates (use the variable \code{isPFcand});
+            \item enforce that the high momentum muons ($\geq 200$ GeV) are ParticleFlow candidates OR have a positive \code{highPtId};
+            \item use the variable \code{pfRelIso03\_all} to apply the condition in Table \ref{leptonSelection}.
+        \end{enumerate}
+    }
+\end{itemize}
+
+\begin{exercise}{Writing a Selector -- Muon Selection}[h4l/selection/lepton\_solution.py]
+	Again refering to Table \ref{leptonSelection}, fill in the missing information in the \CCSPStlye{Selector} module \code{muon\_selection} defined in \code{h4l/selection/lepton.py}.
+\end{exercise}
