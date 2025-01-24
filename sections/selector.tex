@@ -49,7 +49,7 @@ Each of these objects uses the relevant event information for its implementation
 For \code{electron\_selection}, the electron kinematic information is first loaded into the \code{uses} set.
 Then, information that is dependent on the nanoAOD version is loaded, in this case which MVA (Multi-Variate Analysis) flag should be used.
 Notice that we use the union operator \code{|} to append either \code{Electron.mvaFall17V2Iso} or \code{Electron.mvaHZZIso} to the set containing the kinematic variables.
-Lastly, to perform four-vector calculations, we also recquire \code{attach\_coffea\_behavior}, which is imported at the beginning of the script from \code{columnflow.selection.util}.
+Lastly, to perform four-vector calculations, we also require \code{attach\_coffea\_behavior}, which is imported at the beginning of the script from \code{columnflow.selection.util}.
 
 
 This \CCSPStlye{Selector} object also has two more dependencies, \code{exposed} and \code{sandbox}.
