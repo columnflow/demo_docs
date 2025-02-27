@@ -1,1 +1,20 @@
 \section{Defining Systematic Uncertainties}\label{sec:shifts}
+This section covers the implementation of systematic uncertainties into the analysis workflow. In the following, two classes of uncertainties (also referred to as shifts) are discussed:
+
+\begin{itemize}
+    \item rate uncertainties modifying the total event yield of a distribution
+    \item shape uncertainties effecting both yield and shape of distributions
+\end{itemize}
+
+Rate uncertainties do not impact the workflow itself as they neither modify the selection efficiency nor require the processing of additional samples. Provided the shift is not considered in any plotting task, it is defined with no additional steps in the inference model which lays the basis of the data card generation (see chapter xx). To include a rate shift in the inference model (here in \code{h4l/inference/h4l\_inference.py}, the function \code{add\_parameter} is used.\\ 
+
+\begin{exercise}{Adding a Rate Uncertainty}
+	The tutorial analysis includes as an example the luminosity uncertainties which are store as auxiliary information in the config instance. For each shift, call the function \code{add\_parameter} to include the respective uncertainty in the data card generation. Use \code{ParameterType.rate\_gauss} as the uncertainty type.
+\end{exercise}
+\vspace{0.5cm}
+
+Shifts modifying also the shape of a given distribution are implemented as `shift objects`. Each shift object (with a unique name and ID) defines a so-called alias - a replacement rule for columns. If the shift object was registered for a specific task, it is not only executed for the nominal column but also for the defined alias. Consider as an example an event weight producer calculating the final weights based on muon scale factors. After computing the weight for the nominal scale factors stored in \code{muon\_weights}, the task is also executed for the up- and down-varied scale factors stored in \code{muon\_weights\_up} and \code{muon\_weight\_down}. The three resulting distributions are again included in the data card production using the function \code{add\_parameter}. Note that some uncertainties (e.g. jet energy corrections) directly modify certain variables such as \code{events.jet.pt} and hence have an effect on the selection efficiency. Therefore, such shifts have to be registered not only for the event weight production but also for any other relevant selection and production task.\\
+
+\begin{exercise}{Adding a Shape Uncertainty}
+    define shift, add alias, register to weight producer, add parameter in inference model - is this included in the tutorial analysis?
+\end{exercise}
