@@ -10,13 +10,18 @@ These functions also have a \code{uses} set, where we can pass the needed column
 
 Once the categories have been defined, they must be added to the analysis config in \code{h4l/config/categories.py}. Here, you can use the \code{add\_category\(\)} helper function.
 As arguments, it requires the config instance and a category name as a \code{string}, e.g. \code{'incl'} and \code{'2j'}. An \code{int} category \code{id} can be passed as an argument but, if it is not, it will be created.
-How these \code{id}s are created can be seen the function \code{create\_category\_id()} in \code{columnflow/config\_util.py}.
+How these \code{id}s are created can be seen in the function \code{create\_category\_id()} in \code{columnflow/config\_util.py}.
 Additionally, the categorizer function name should be passed as a \code{selection} argument. A \code{label} argument for plotting is optional.
 
 \newpage
 
 \begin{exercise}{Defining Categories}[h4l/categorization/solution.py]
-	Write three new \CCSPStlye{Categorizer} functions in \code{h4l/categorization/default.py} to select, respectively, events with \textit{at least} four electrons, four muons and, lastly, two electrons and two muons.
+	Write three new \CCSPStlye{Categorizer} functions in \code{h4l/categorization/default.py}.
+    \begin{itemize}
+    \item One should select events with at least four electrons;
+    \item One should select events with at least four muons;
+    \item One should select events with at least two electrons and at least two muons.
+    \end{itemize} \\
     Add each category to the config in \code{h4l/config/categories.py}.
 \end{exercise}
 
@@ -26,7 +31,7 @@ The helper function \code{create\_category\_combinations()}, also defined in \co
 To define which combinations should be preformed, a \code{dict} object should be passed as the \code{categories} argument to the function.
 The keys should be the \textit{orthogonal} discrete variable group names (e.g. \code{'channel'} or \code{'kinematics'}) and the values should be a \code{list} containing the single categories based on that respective variable.
 
-The leaf categories will be created by picking a single category from \textit{each} variable group. Thus, in this example, \code{cat\_incl} and \code{cat\_2j} would not be combined into a leaf category, since they belong to the same variable group, \code{'kinematics'}.
+The leaf categories will be created by picking a single category from \textit{each} variable group. Thus, in this example, \code{cat\_incl} and \code{cat\_2j} would not be combined into a leaf category, since they should belong to the same variable group, \code{'kinematics'}.
 A possible combination would be to consider, for instance, a new category \code{cat\_ee} containing events with exactly two electrons, assigned to the variable group \code{'channel'}.
 Then, the new leaf categories would be created as \code{cat\_\_incl\_\_ee} and \code{cat\_\_2j\_\_ee}, with their own automatically generated \code{id}s. If a \code{label} was provided to each parent category, a new one will also be generated for the leaf categories.
 
@@ -49,14 +54,15 @@ Note: Leaf categories are not necessarily complete!
 
 Another important point to consider is the completeness of the phase-space.
 For a certain variable group, the sum of its categories may or may not cover the full phase-space.
-In this example, the \code{'channel'} group is incomplete, as events with other leptons in the final state, or a different number of electron other than two, are not represented in the group.
+In this example, the \code{'channel'} group is incomplete, as events with different final state composition are not represented in the group.
 In this case, if we were to request the parent category \code{cat\_\_2j}, we would only get the sum of the leaf categories, which is the single \code{cat\_\_2j\_\_ee}. Events with two jets but with different final state leptons would not be represented.
-Therefore, it is up to the user to ensure orthogonality and completeness of all categories when defining the parent categories and the variable groups!
+Therefore, it is up to the user to ensure orthogonality and completeness of all categories when defining the parent categories and the variable groups.
 
-A schematic view of the category combinatorics logic is shown in Fig.~\ref{fig:categories}.
+Fig.~\ref{fig:categories} shows a schematic view of the logic behind category combinatorics in ColumnFlow.
+\captionsetup{justification=justified}
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.8\textwidth]{figures/categories}
-    \caption{Schematic view of the category combinatorics.}
+    \includegraphics[width=\textwidth]{images/categories.pdf}
+    \caption{Example of category combinatorics within ColumnFlow. The variable groups are defined to be orthogonal. Within each variable group, the parent categories are defined so as to cover the whole phase-space and also be orthogonal among themselves. The solid grey lines represent two examples of how parent categories combine into distinct leaf categories. The dashed grey lines represent one example on how a parent category is resolved from the sum of its associated leaf categories. In this example, the four leaf categories are orthogonal and, when summed together, span the whole phase-space without double-counting.}
     \label{fig:categories}
 \end{figure}
