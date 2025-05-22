@@ -1,1 +1,8 @@
-\section{Define Sets of Weights to use for Templates}\label{sec:event_weights}
+\section{Writing Weight Producers}\label{sec:event_weights}
+
+Before producing histograms with the event information we are interested in analysing, we need to define which event weights should be used.
+Any sort of weights must be first computed by their own \CCSPStlye{Producer}. Recall the example Monte Carlo weight producer, \code{mc\_weight}, mentioned in \ref{sec:producer}.
+This, and other producers for commonly used weights, are available in \code{columnflow.production.cms}.
+
+In this section, we show how to combine all weights into a final event weight, with the possibility of defininf different final event weights based on which specific weights we wish to apply.
+For this, the \CCSPStlye{WeightProducer} class is used.
